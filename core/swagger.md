@@ -332,7 +332,7 @@ api_platform:
 ```yaml
 # app/config/routes.yaml
 swagger_ui:
-    path: /docs
+    path: /api_doc
     controller: api_platform.swagger.action.ui
 ```
 
