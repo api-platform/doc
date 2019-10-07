@@ -30,10 +30,21 @@ services:
         arguments: [ { dateProperty: ~ } ]
         tags:  [ 'api_platform.filter' ]
         # The following are mandatory only if a _defaults section is defined
-        # You may want to isolate filters in a dedicated file to avoid adding them
+        # see https://symfony.com/doc/current/service_container/3.3-di-changes.html#the-new-default-services-yaml-file
         autowire: false
         autoconfigure: false
         public: false
+```
+
+You may want to isolate filters in a dedicated file to avoid repetition:
+
+```yaml
+# api/config/filters.yaml
+services:
+    offer.date_filter:
+        parent: 'api_platform.doctrine.orm.date_filter'
+        arguments: [ { dateProperty: ~ } ]
+        tags:  [ 'api_platform.filter' ]
 ```
 
 We're linking the filter `offer.date_filter` with the `@ApiResource` annotation:
@@ -1074,7 +1085,7 @@ class DummyCar
      * @ApiFilter(SearchFilter::class, properties={"colors.prop": "ipartial"})
      */
     private $colors;
-    
+
     // ...
 }
 
