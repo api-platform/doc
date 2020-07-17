@@ -53,13 +53,13 @@ types:
 The cardinality of a property is automatically guessed. The `cardinality` option allows to override the guessed value.
 Supported cardinalities are:
 
-* `(0..1)`: scalar, not required
-* `(0..*)`: array, not required
-* `(1..1)`: scalar, required
-* `(1..*)`: array, required
-* `(*..0)`
-* `(*..1)`
-* `(*..*)`
+* `(0..1)`: scalar, not required, annotate as OneToMany nullable
+* `(0..*)`: array, not required, annotate as ManyToMany, it is possible to specify cross table
+* `(1..1)`: scalar, required, annotate as OneToOne, ot nullable
+* `(1..*)`: array, required, annotate as ManyToMany, not nullable and unique
+* `(*..0)`: array, not required, annotate as ManyToOne nullable
+* `(*..1)`: array, required, annotate as ManyToOne not nullable
+* `(*..*)`: array, not required, annotate as ManyToMany nullable
 
 Cardinalities are enforced by the class generator, the Doctrine ORM generator and the Symfony validation generator.
 
@@ -72,6 +72,17 @@ types:
             sku:
                 cardinality: "(0..1)"
 ```
+
+Cardinality format: 
+```
+currentEntity:
+    properties:
+        targetEntityRel: { range: TargetEntity, cardinality: (%%currentEntityValue%%..%%targetEntityValue%%) }
+```
+where both `currentEntityValue` and `targetEntityValue` values can be:
+ - 0 : a nullable element in the relationship
+ - 1 : a non nullable element in the relationship
+ - * : an array of elements
 
 ## Forcing a Relation Table Name
 
