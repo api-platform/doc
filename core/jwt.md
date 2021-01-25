@@ -223,7 +223,7 @@ final class SwaggerDecorator implements NormalizerInterface
     {
         $docs = $this->decorated->normalize($object, $format, $context);
 
-        $docs['components']['schemas']['Token'] = [
+        $docs['definitions']['Token'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
                 'token' => [
@@ -231,21 +231,21 @@ final class SwaggerDecorator implements NormalizerInterface
                     'readOnly' => true,
                 ],
             ],
-        ];
+        ]);
 
-        $docs['components']['schemas']['Credentials'] = [
+        $docs['definitions']['Credentials'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
                 'username' => [
                     'type' => 'string',
-                    'example' => 'api',
+                    'example' => 'john',
                 ],
                 'password' => [
                     'type' => 'string',
-                    'example' => 'api',
+                    'example' => 'mypass',
                 ],
             ],
-        ];
+        ]);
 
         $tokenDocumentation = [
             'paths' => [
@@ -253,24 +253,26 @@ final class SwaggerDecorator implements NormalizerInterface
                     'post' => [
                         'tags' => ['Token'],
                         'operationId' => 'postCredentialsItem',
-                        'summary' => 'Get JWT token to login.',
-                        'requestBody' => [
-                            'description' => 'Create new JWT Token',
-                            'content' => [
-                                'application/json' => [
-                                    'schema' => [
-                                        '$ref' => '#/components/schemas/Credentials',
-                                    ],
+                        'summary' => 'Create new JWT Token',
+                        'parameters' => [
+                            [
+                                'name' => 'Token creation',
+                                'in' => 'body',
+                                'description' => 'Credentials to authenticate',
+                                'schema' => [
+                                    '$ref' => '#/definitions/Credentials',
                                 ],
                             ],
                         ],
+                        'consumes' => 'application/json',
+                        'produces' => 'application/json',
                         'responses' => [
                             Response::HTTP_OK => [
                                 'description' => 'Get JWT token',
                                 'content' => [
                                     'application/json' => [
                                         'schema' => [
-                                            '$ref' => '#/components/schemas/Token',
+                                            '$ref' => '#/definitions/Token',
                                         ],
                                     ],
                                 ],
